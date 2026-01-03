@@ -18,13 +18,16 @@ repositories {
 }
 
 dependencies {
-    // Spring Boot starters
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     
-    // Firebase Admin SDK
+    // Firebase Admin SDK (if using Firebase)
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+    
+    // PayPal SDK (IMPORTANT - Add this!)
+    implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
     
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -33,4 +36,15 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// This ensures a single JAR is created (important for Docker)
+bootJar {
+    archiveFileName = 'app.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Disable plain JAR (we only need the executable Spring Boot JAR)
+jar {
+    enabled = false
 }
