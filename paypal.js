@@ -9,7 +9,7 @@ async function createOrder(amount) {
         {
           amount: {
             currency_code: "PHP",
-            value: amount.toFixed(2)
+            value: Number(amount).toFixed(2)
           }
         }
       ],
