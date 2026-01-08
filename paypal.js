@@ -35,8 +35,8 @@ async function createOrder(amount) {
       purchase_units: [
         {
           amount: {
-            currency_code: "USD",
-            value: amount
+            currency_code: "PHP",
+            value: amount.toFixed(2)
           }
         }
       ]
@@ -51,6 +51,7 @@ async function createOrder(amount) {
 
   return res.data;
 }
+
 
 async function captureOrder(orderId) {
   const token = await getAccessToken();
