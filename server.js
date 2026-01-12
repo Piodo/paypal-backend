@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { getAccessToken, createOrder, captureOrder } = require("./paypal");
 const admin = require("firebase-admin");
-cconst serviceAccount = JSON.parse(
+const serviceAccount = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT
 );
 
