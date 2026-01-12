@@ -3,7 +3,9 @@ const cors = require("cors");
 require("dotenv").config();
 const { getAccessToken, createOrder, captureOrder } = require("./paypal");
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json");
+cconst serviceAccount = JSON.parse(
+  process.env.FIREBASE_SERVICE_ACCOUNT
+);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
