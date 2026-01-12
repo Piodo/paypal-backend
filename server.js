@@ -2,6 +2,14 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { getAccessToken, createOrder, captureOrder } = require("./paypal");
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
 
 const app = express();
 
@@ -110,6 +118,20 @@ app.get("/success", async (req, res) => {
       const captureDetails = capture.purchase_units[0].payments.captures[0];
       const amount = captureDetails.amount.value;
       const currency = captureDetails.amount.currency_code;
+	await db.collection("payments").add({
+  amount: Number(amount),
+  currency: currency,
+  customerId: capture.payer?.payer_id || "unknown",
+  customerName: `${capture.payer?.name?.given_name || ""} ${capture.payer?.name?.surname || ""}`.trim(),
+  deposit: true,
+  paymentDate: admin.firestore.FieldValue.serverTimestamp(),
+  paymentMethod: "paypal",
+  paymentStatus: "completed",
+  remainingBalance: 0,
+  transactionId: captureDetails.id
+});
+
+console.log("🔥 PAYMENT SAVED TO FIRESTORE:", captureDetails.id);
 
       // Send beautiful success page
       res.send(`
